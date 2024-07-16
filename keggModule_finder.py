@@ -74,7 +74,7 @@ def module_solver(expr,annotation_set): # expr is the definition of the module
         converted.append(conv)
     
     pres=0
-    for i in range(len(converted)): # then each boolean step is evaluated and the fraction of present step is returned
+    for i in range(len(converted)): # then each boolean step is evaluated and the number of present step is returned
         if converted[i]=='': 
             continue
         if eval(converted[i]):
