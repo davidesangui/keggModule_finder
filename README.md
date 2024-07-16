@@ -14,7 +14,7 @@ Starting from the count output, any user can define the encoding potential in th
 ## Usage
 keggModule_finder.py requires a set of KEGG orthologues. Two file formats are currently supported:  
 - list: a simple text file where each line lists a KEGG orthologue if the genome encodes it (see "list_annotations" folder in this repository).
-- emapper: The output of eggnog-mapper (https://github.com/eggnogdb/eggnog-mapper). In particular, only the file ending with ".emapper.annotations". In this case, the input files given to keggModule_finder.py folder must end with this suffix (see "emapper_annotations" folder in this repository). 
+- emapper: The output of eggnog-mapper (https://github.com/eggnogdb/eggnog-mapper). In particular, only the file ending with ".emapper.annotations". In this case, the input files given to keggModule_finder.py folder must end with this suffix (see "emapper_annotations" folder in this repository).  
 keggModule_finder.py takes as input a folder containing these annotation files for any number of genomes. The format must be specified with the flag ```-format```  
 keggModule_finder.py requires a "module_definition" file, like the one in this repository (module_definitions_JULY24.tsv). Only the modules listed in this file will be evaluated. This file can be passed with the flag ```-definition_file```. A definition file listing all KEGG modules (July 2024) can be obtained from this repository. A more updated version can be obtained by parsing the KEGG database by setting the flag ```--get_definitions``` (which takes five-ten minutes). Such a file can be modified by inserting custom modules, as long as the custom definitions observe KEGG definitions' logic and format.
 ### Example
