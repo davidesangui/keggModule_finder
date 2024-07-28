@@ -9,7 +9,7 @@ pip install bio
 ## How it works
 keggModule_finder uses the rules of KEGG module definitions and the set of KEGG orthologues to define the capability of the corresponding microbial genomes to encode KEGG modules.
 
-Each definition is divided in step, and each step requires one or more KEGG orthologues depending on a set of logical relationship between them. keggModule_finder defines a KEGG module as encoded by a microbial genome if at least N-1 steps can be performed by the genome, where N is the total number of steps of the module.  
+Each definition is divided in step, and each step requires one or more KEGG orthologues depending on a set of logical relationships between them. keggModule_finder defines a KEGG module as encoded by a microbial genome if at least N-1 steps can be performed by the genome, where N is the total number of steps of the module.  
 
 A binary matrix defining presence and absence of KEGG modules in a genome is given as output, as well as the count of encoded steps for each genome for each module.
 Starting from the count output, any user can define the encoding potential in the way he finds most suitable.
