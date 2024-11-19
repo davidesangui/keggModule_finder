@@ -152,7 +152,7 @@ new2=open(args.outputPrefix+'_minusOne.tsv','w')
 topr='genome'
 topr2='genome'
 for mod in mod_def:
-    topr+='\t'+mod+',length='+str(module_length(mod_def[mod]))
+    topr+='\t'+mod +',length='+str(module_length(mod_def[mod]))
     topr2+='\t'+mod
 print(topr,file=new)
 print(topr2,file=new2)
@@ -169,7 +169,7 @@ for gen in annot_dict:
             continue
         ko_pres=module_solver(definition,annot_dict[gen])
         topr+='\t'+str(ko_pres)
-        topr2=topr2+'\t'+'1' if ko_pres>=module_length(mod_def[mod])-1 else topr2+'\t'+'0'
+        topr2=topr2+'\t'+'1' if (ko_pres>=module_length(mod_def[module])-1 and ko_pres>0) else topr2+'\t'+'0'
     print(topr,file=new)
     print(topr2,file=new2)
 new.close()
