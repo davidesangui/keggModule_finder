@@ -1,7 +1,11 @@
 # keggModule_finder
 Simple script to parse KEGG orthologues annotations and KEGG database to identify KEGG modules encoded by microbial genomes.
 ## Installation
-No installation is needed. Simply download the file keggModule_finder.py from this repository and launch it with Python3.  
+Simply download the file keggModule_finder.py from this repository and launch it with Python3.  
+Pandas Python package is required, and it can be obtained via pip:
+```
+pip install pandas
+```
 If the KEGG database is to be parsed to obtain module definitions, then the python package Bio is required, which can be obtained via pip:
 ```
 pip install bio
