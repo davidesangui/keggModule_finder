@@ -1,5 +1,6 @@
 import os
 import argparse
+import pandas as pd
 
 parser=argparse.ArgumentParser()
 parser.add_argument("annotationFolder",help="Folder containing annotations, one per genome.")
@@ -63,7 +64,7 @@ def module_solver(expr,annotation_set): # expr is the definition of the module
                     conv+='or '
                 elif step[i]=='(' or step[i]==')':
                     conv+=step[i]
-                elif step[i]=='K' and step[i-1]!='-':
+                elif (step[i]=='K' or step[i]=='M') and step[i-1]!='-':
                     if step[i:i+6] in annotation_set:
                         conv+='True '
                     else:
@@ -145,32 +146,36 @@ if args.format=='list': annot_dict=annot_list(args.annotationFolder)
 elif args.format=='emapper': annot_dict=annot_emapper(args.annotationFolder) 
 
 mod_def=module_definer(definition_file)
-
-new=open(args.outputPrefix+'_count.tsv','w')
-new2=open(args.outputPrefix+'_minusOne.tsv','w')
-
-topr='genome'
-topr2='genome'
-for mod in mod_def:
-    topr+='\t'+mod +',length='+str(module_length(mod_def[mod]))
-    topr2+='\t'+mod
-print(topr,file=new)
-print(topr2,file=new2)
+mod_kopres={gen:{module:module_solver(mod_def[module],annot_dict[gen]) for module in mod_def} for gen in annot_dict}
+for gen in annot_dict:
+    for mod in mod_kopres[gen]:
+        if mod_kopres[gen][mod]>=module_length(mod_def[mod])-1 and mod_kopres[gen][mod]>0: annot_dict[gen].add(mod)
+todf={}
+todf['length']=[module_length(mod_def[module]) for module in mod_def]
+for gen in annot_dict: todf[gen]=[0]*len(mod_def)
+todf_minusone={gen:[0]*len(mod_def) for gen in annot_dict}
 
 for gen in annot_dict:
     annot_set=annot_dict[gen]
     topr=gen
     topr2=gen
-    for module in mod_def:
-        definition=mod_def[module]
-        if 'M' in definition: # skip nested modules
-            topr+='\t'+'0'
-            topr2+='\t'+'0'
-            continue
-        ko_pres=module_solver(definition,annot_dict[gen])
-        topr+='\t'+str(ko_pres)
-        topr2=topr2+'\t'+'1' if (ko_pres>=module_length(mod_def[module])-1 and ko_pres>0) else topr2+'\t'+'0'
-    print(topr,file=new)
-    print(topr2,file=new2)
-new.close()
-new2.close()
+    for n,module in enumerate(mod_def):
+        if 'M' in mod_def[module]:
+            ko_pres=module_solver(mod_def[module],annot_dict[gen])
+            todf[gen][n]=ko_pres
+            todf_minusone[gen][n]=1 if (ko_pres>=module_length(mod_def[module])-1 and ko_pres>0) else 0
+        else:
+            ko_pres=mod_kopres[gen][module]
+            todf[gen][n]=ko_pres
+            todf_minusone[gen][n]=1 if (ko_pres>=module_length(mod_def[module])-1 and ko_pres>0) else 0
+df=pd.DataFrame.from_dict(todf)
+df['module']=list(mod_def.keys())
+df=df.set_index('module')
+df.to_csv(args.outputPrefix+'_count.tsv',sep='\t')
+df2=pd.DataFrame.from_dict(todf_minusone)
+df2['module']=list(mod_def.keys())
+df2=df2.set_index('module')
+df2.to_csv(args.outputPrefix+'_minusOne.tsv',sep='\t')
+
+
+
